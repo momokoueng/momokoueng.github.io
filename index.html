@@ -1103,34 +1103,8 @@ window.showMsgModal=showMsgModal;
 window.markOrderAsCompleted=markOrderAsCompleted;
 window.deleteContract=deleteContract;
 window.saveTypedSignature=saveTypedSignature; // NEW: 文本签名保存函数
-<!-- Supabase 云数据库连接 -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
-<script>
-  const supabaseUrl = "https://dlsxqnhdwykcqzicydwj.supabase.co";
-  const supabaseKey = "eyJxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";  // 换成你的 anon public key
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-  async function loadListings() {
-    const { data, error } = await supabase.from('listings').select('*');
-    if (error) {
-      console.error('加载失败:', error);
-      return;
-    }
-    const listDiv = document.getElementById('listingList');
-    listDiv.innerHTML = data.map(item => `
-      <div class="item">
-        <img src="${item.img || ''}" alt="">
-        <div class="b">
-          <b>${item.title}</b>
-          <div class="muted">${item.category} · ${item.layout || ''}</div>
-          <div class="price">￥${item.price}/月</div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  loadListings();
-</script>
 </script>
 </body>
 </html>
+
