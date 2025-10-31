@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>房源管理</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <h1>房源管理</h1>
+    <nav class="nav">
+      <a href="dashboard.html">总览</a>
+      <a href="rooms.html" class="active">房源</a>
+      <a href="tenants.html">租户</a>
+      <a href="facilities.html">娱乐设施</a>
+      <a href="orders.html">折单中心</a>
+      <a href="stars.html">星豆系统</a>
+      <a href="statistics.html">数据统计</a>
+      <a href="contracts.html">合同管理</a>
+      <a href="profile.html">个人中心</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="form-section">
+      <h2>新增房源</h2>
+      <form id="addListingForm" class="form">
+        <label>标题
+          <input type="text" name="title" required>
+        </label>
+        <label>分类
+          <input type="text" name="category">
+        </label>
+        <label>价格(元/月)
+          <input type="number" name="price" required>
+        </label>
+        <label>户型
+          <input type="text" name="layout">
+        </label>
+        <label>上传图片
+          <input type="file" name="image" accept="image/*">
+        </label>
+        <button type="submit" class="btn">保存</button>
+      </form>
+    </section>
+
+    <section class="list-section">
+      <h2>房源列表</h2>
+      <div id="listingList"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-adapter.js"></script>
+  <script>
+    // 展示房源列表
+    async function renderListing(){
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*');
+      if (error) {
+        console.error(error);
+        return;
+      }
+      const el = document.getElementById('listingList');
+      if (!data || data.length === 0) {
+        el.innerHTML = '<p>暂无房源</p>';
+        return;
+      }
+      el.innerHTML = data.map(item => `
+        <div class="card">
+          <h3>${item.title}</h3>
+          <p>${item.category || ''} | ￥${item.price}/月 | ${item.layout || ''}</p>
+          ${item.img ? `<img src="${item.img}" alt="图片" style="max-width:100%;height:auto;">` : ''}
+        </div>
+      `).join('');
+    }
+
+    // 文件转Base64
+    function fileToDataURL(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.getElementById('addListingForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      let imgData = '';
+      const file = fd.get('image');
+      if (file && file.size > 0) {
+        imgData = await fileToDataURL(file);
+      }
+      const { error } = await supabase.from('listings').insert([
+        {
+          title: fd.get('title'),
+          category: fd.get('category'),
+          price: parseInt(fd.get('price')),
+          layout: fd.get('layout'),
+          img: imgData
+        }
+      ]);
+      if (error) {
+        alert('保存失败: ' + error.message);
+      } else {
+        alert('保存成功');
+        e.target.reset();
+        renderListing();
+      }
+    });
+
+    renderListing();
+  </script>
+</body>
+</html>
