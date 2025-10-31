@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据统计 - 沪乐锦公寓</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,system-ui,"Microsoft Yahei";background:#fff5ec;color:#333;margin:0;}
+header{background:#fff7f0;color:#ff7f32;padding:20px;font-weight:700;}
+nav{background:#fff;padding:10px;display:flex;flex-wrap:wrap;gap:10px;}
+nav a{color:#ff7f32;text-decoration:none;padding:6px 10px;border-radius:6px;}
+nav a.active{background:#ffead7;}
+main{padding:20px;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;}
+.stats-card{background:#fff;border:1px solid #f0e2d6;border-radius:8px;padding:16px;text-align:center;}
+.stats-card h3{margin-bottom:10px;font-size:16px;color:#ff7f32;}
+.stats-card p{font-size:24px;font-weight:bold;}
+</style>
+</head>
+<body>
+<header>数据统计中心</header>
+<nav>
+<a href="dashboard.html">总览</a>
+<a href="rooms.html">房源管理</a>
+<a href="tenants.html">租户中心</a>
+<a href="facilities.html">娱乐设施</a>
+<a href="orders.html">抢单中心</a>
+<a href="stars.html">星豆系统</a>
+<a class="active" href="statistics.html">数据统计</a>
+<a href="contracts.html">合同管理</a>
+<a href="profile.html">个人中心</a>
+</nav>
+<main>
+<section>
+<h2>概览</h2>
+<div class="stats-grid">
+<div class="stats-card">
+<h3>房源数量</h3>
+<p id="count-listings">0</p>
+</div>
+<div class="stats-card">
+<h3>租户数量</h3>
+<p id="count-tenants">0</p>
+</div>
+<div class="stats-card">
+<h3>订单数量</h3>
+<p id="count-orders">0</p>
+</div>
+<div class="stats-card">
+<h3>合同数量</h3>
+<p id="count-contracts">0</p>
+</div>
+<div class="stats-card">
+<h3>星豆记录</h3>
+<p id="count-starlogs">0</p>
+</div>
+</div>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-adapter.js"></script>
+<script>
+async function renderStats(){
+  const { data: listingsData, error: lerr } = await supabase.from('listings').select('*');
+  document.getElementById('count-listings').innerText = listingsData ? listingsData.length : 0;
+  const { data: tenantsData, error: terr } = await supabase.from('tenants').select('*');
+  document.getElementById('count-tenants').innerText = tenantsData ? tenantsData.length : 0;
+  const { data: ordersData, error: oerr } = await supabase.from('orders').select('*');
+  document.getElementById('count-orders').innerText = ordersData ? ordersData.length : 0;
+  const { data: contractsData, error: cerr } = await supabase.from('contracts').select('*');
+  document.getElementById('count-contracts').innerText = contractsData ? contractsData.length : 0;
+  const { data: starlogData, error: serr } = await supabase.from('starlogs').select('*');
+  document.getElementById('count-starlogs').innerText = starlogData ? starlogData.length : 0;
+}
+renderStats();
+</script>
+</body>
+</html>
