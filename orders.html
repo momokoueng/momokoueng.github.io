@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>服务订单管理</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <h1>服务订单</h1>
+    <nav class="nav">
+      <a href="dashboard.html">总览</a>
+      <a href="rooms.html">房源</a>
+      <a href="tenants.html">租户</a>
+      <a href="facilities.html">娱乐设施</a>
+      <a href="orders.html" class="active">抢单中心</a>
+      <a href="stars.html">星豆系统</a>
+      <a href="statistics.html">数据统计</a>
+      <a href="contracts.html">合同管理</a>
+      <a href="profile.html">个人中心</a>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="orders-section">
+      <h2>服务订单管理</h2>
+      <div id="orderList"></div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-adapter.js"></script>
+  <script>
+  async function renderOrders() {
+    const { data, error } = await supabase.from('orders').select('*').order('ts', { ascending: false });
+    const el = document.getElementById('orderList');
+    if (error) {
+      el.innerHTML = '<p>\u8bfb\u53d6\u6570\u636e\u51fa\u9519：' + error.message + '</p>';
+      return;
+    }
+    el.innerHTML = data.map(ord => `
+      <div class="order-card">
+        <div class="order-title"><b>${ord.intent || ''}</b></div>
+        <div class="order-info">\u79df\u6237：${ord.name || ''} ${ord.phone || ''}</div>
+        <div class="order-date">\u65f6\u95f4：${ord.date || ''}</div>
+        <div class="order-status">\u72b6\u6001：${ord.status || ''}</div>
+        <button class="btn">\u62a2\u5355</button>
+      </div>
+    `).join('') || '<p>\u6682\u65e0\u8ba2\u5355。</p>';
+  }
+  renderOrders();
+  </script>
+</body>
+</html>
