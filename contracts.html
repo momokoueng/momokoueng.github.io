@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>合同管理 - 沪乐锦公寓</title>
+  <style>
+    html,body{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:-apple-system,system-ui,"Microsoft Yahei";background:#fff;color:#333;}
+    header{background:#fff7f0;color:#ff7f32;padding:20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;}
+    h1{margin:0;font-size:24px;}
+    nav{background:#fff;padding:10px;display:flex;flex-wrap:wrap;gap:10px;}
+    nav a{color:#ff7f32;text-decoration:none;padding:6px 10px;border-radius:8px;}
+    nav a.active{background:#ffe2bf;}
+    main{padding:20px;}
+    form{background:#fff;border:1px solid #ffead6;border-radius:8px;padding:12px;margin-bottom:20px;}
+    form label{display:block;margin-bottom:8px;}
+    form input{width:100%;padding:6px;border:1px solid #ddd;border-radius:6px;margin-bottom:10px;}
+    .btn{background:#ff7f32;color:#fff;border:none;border-radius:6px;padding:8px 12px;cursor:pointer;}
+    table{width:100%;border-collapse:collapse;margin-top:10px;}
+    th,td{border:1px solid #ffead6;padding:8px;text-align:left;}
+    tbody tr:nth-child(odd){background:#fff7f0;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>合同管理中心</h1>
+  </header>
+  <nav>
+    <a href="dashboard.html">总览</a>
+    <a href="rooms.html">房源管理</a>
+    <a href="tenants.html">租户中心</a>
+    <a href="facilities.html">娱乐设施</a>
+    <a href="orders.html">抢单中心</a>
+    <a href="stars.html">星豆系统</a>
+    <a href="statistics.html">数据统计</a>
+    <a href="contracts.html" class="active">合同管理</a>
+    <a href="profile.html">个人中心</a>
+  </nav>
+  <main>
+    <h2>新增合同</h2>
+    <form id="addContractForm">
+      <label>合同编号<input name="no" required></label>
+      <label>租客<input name="name" required></label>
+      <label>房源<input name="house" required></label>
+      <label>租期<input name="period" required></label>
+      <button class="btn" type="submit">保存合同</button>
+    </form>
+    <h2>合同记录</h2>
+    <table>
+      <thead>
+        <tr><th>合同编号</th><th>租客</th><th>房源</th><th>租期</th><th>状态</th></tr>
+      </thead>
+      <tbody id="contractList"></tbody>
+    </table>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-adapter.js"></script>
+  <script>
+    async function renderContracts(){
+      const { data, error } = await supabase.from('contracts').select('*');
+      const tbody = document.getElementById('contractList');
+      if(error){
+        console.error(error);
+        tbody.innerHTML = '<tr><td colspan="5">\u52a0\u8f7d\u9519\u8bef</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(c => 
+        `<tr><td>${c.no || ''}</td><td>${c.name || ''}</td><td>${c.house || ''}</td><td>${c.period || ''}</td><td>${c.status || ''}</td></tr>`
+      ).join('') || '<tr><td colspan="5">\u6682\u65e0\u8bb0\u5f55</td></tr>';
+    }
+    document.getElementById('addContractForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const { error } = await supabase.from('contracts').insert([{ 
+        no: fd.get('no'),
+        name: fd.get('name'),
+        house: fd.get('house'),
+        period: fd.get('period'),
+        status: '\u5df2\u7b7e'
+      }]);
+      if(error){
+        alert('\u4fdd\u5b58\u5931\u8d25\uff1a' + error.message);
+      }else{
+        e.target.reset();
+        renderContracts();
+      }
+    });
+    renderContracts();
+  </script>
+</body>
+</html>
