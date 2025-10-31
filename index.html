@@ -1,12 +1,72 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <title>滬乐锦公寓系统</title>
-  <!-- Redirect to the new dashboard page -->
-  <meta http-equiv="refresh" content="0; url=dashboard.html">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>沪乐锦公寓 HuLeJin Apartments</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  如果浏览器没有自动跳转，请点击 <a href="dashboard.html">这里</a>。
+  <!-- 顶部导航 -->
+  <header class="navbar">
+    <div class="logo">沪乐锦</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">首页</a></li>
+        <li><a href="yunfei.html">云飞公寓</a></li>
+        <li><a href="hulejin.html">沪乐锦公寓</a></li>
+        <li><a href="baima.html">白马公寓</a></li>
+        <li><a href="bieshu.html">别墅</a></li>
+      </ul>
+    </nav>
+    <div class="phone">客服电话：159 0179 5359</div>
+  </header>
+
+  <!-- banner轮播 -->
+  <section class="banner">
+    <div class="slides">
+      <img src="banner1.jpg" class="active" alt="沪乐锦公寓" />
+      <img src="banner2.jpg" alt="白马公寓" />
+      <img src="banner3.jpg" alt="云飞公寓" />
+    </div>
+  </section>
+
+  <!-- 搜索框 -->
+  <section class="search">
+    <input type="text" placeholder="输入关键字搜索房源..." />
+    <button>搜索</button>
+  </section>
+
+  <!-- 房源展示 -->
+  <section class="apartment-list">
+    <h2>精选房源</h2>
+    <div class="cards">
+      <div class="card">
+        <img src="house1.jpg" alt="房源1" />
+        <h3>云飞公寓 · 一居室</h3>
+        <p>月租：3500 元</p>
+        <button>立即预约</button>
+      </div>
+      <div class="card">
+        <img src="house2.jpg" alt="房源2" />
+        <h3>白马公寓 · 一居室</h3>
+        <p>月租：2600 元</p>
+        <button>立即预约</button>
+      </div>
+      <div class="card">
+        <img src="house3.jpg" alt="房源3" />
+        <h3>别墅 · 双层带院</h3>
+        <p>月租：8800 元</p>
+        <button>立即预约</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer>
+    <p>© 2025 沪乐锦公寓 | 客服热线：159 0179 5359</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
